@@ -1,0 +1,290 @@
+---
+id: conheca-o-minimo-de-estrutura-de-dados
+title: 'Conheça o mínimo de Estrutura de Dados'
+slug: conheca-o-minimo-de-estrutura-de-dados
+preview: 'Bom, para entendermos o que são estruturas de dados, vamos entender o que é uma estrutura e o que é um dado.  Uma estrutura é uma forma de organização, uma aplicação de um padrão de ações em cima de alguma coisa, neste caso, os dados. Já os dados são elementos armazenados em variáveis no sistema, representados por algum tipo (numérico, booleano, string, etc.), que, quando processados, se tornam informação...'
+date: '2024-07-15T22:28:47+01:00'
+coverPath: /images/posts/conheca-o-minimo-de-estrutura-de-dados.jpg
+categories:
+    - { id: fundamentos, title: Fundamentos }
+    - { id: javascript, title: JavaScript }
+---
+
+Bom, para entendermos o que são estruturas de dados, vamos entender o que é uma estrutura e o que é um dado.
+
+Uma estrutura é uma forma de organização, uma aplicação de um padrão de ações em cima de alguma coisa, neste caso, os dados. Já os dados são elementos armazenados em variáveis no sistema, representados por algum tipo (numérico, booleano, string, etc.), que, quando processados, se tornam informação.
+
+Portanto, a estrutura de dados serve para organizar a manipulação e o armazenamento de dados nos sistemas. A forma como os dados serão estruturados depende de como o sistema deve utilizá-los.
+
+Vejamos a seguir as estruturas de dados mais introdutórias e comuns:
+
+## Array
+
+Um array é a estrutura de dados mais simples possível em memória. Por isso, as linguagens de programação possuem esse tipo de dado incluído. Mesmo não necessariamente sendo um array, pois array é diferente de lista, mas isso é papo para outro post.
+
+Um array armazena valores do mesmo tipo sequencialmente na memória. Portanto, quando instanciado, deve-se definir seu tamanho total para que seja alocado armazenamento de forma sequencial. Dessa forma, sabemos que um array é linear e estático.
+
+### Operações
+
+Um array é capaz de realizar as seguintes operações:
+
+- Adicionar e remover elementos de qualquer posição.
+- Ler qualquer elemento a partir de seu índice.
+
+### Usos Práticos
+
+Imagine que estamos desenvolvendo um sistema de agendamento de compromissos em uma empresa. Nesse sistema, precisamos armazenar os nomes dos dias da semana para exibir em um calendário.
+
+```java
+public class SistemaDeAgendamento {
+    // Array de dias da semana
+    private static final String[] diasDaSemana = {
+        "Domingo", "Segunda-feira", "Terça-feira", "Quarta-feira",
+        "Quinta-feira", "Sexta-feira", "Sábado"
+    };
+
+    // Método para obter o nome do dia da semana
+    public static String obterNomeDoDia(int indice) {
+        if (indice < 0 || indice >= diasDaSemana.length) {
+            throw new IllegalArgumentException("Índice inválido: " + indice);
+        }
+        return diasDaSemana[indice];
+    }
+
+    public static void main(String[] args) {
+        // Exibindo todos os dias da semana
+        for (int i = 0; i < diasDaSemana.length; i++) {
+            System.out.println("Dia " + (i + 1) + ": " + diasDaSemana[i]);
+        }
+
+        // Obtendo o nome de um dia específico
+        int dia = 3; // Por exemplo, queremos o nome do 4º dia da semana
+        String nomeDoDia = obterNomeDoDia(dia);
+        System.out.println("O " + (dia + 1) + "º dia da semana é: " + nomeDoDia);
+    }
+}
+```
+
+## Pilha
+
+Por outro lado, existem estruturas de dados que possuem propósitos específicos que necessitam de um controle maior na adição e remoção de dados, como é o caso da Pilha.
+
+Como o próprio nome diz, a pilha é uma estrutura na qual os dados são adicionados sempre ao final, e consequentemente sua remoção é sempre do final. Portanto, não é possível remover dados de qualquer posição da pilha, sempre ao final (LIFO - Last In First Out - Último que entra, primeiro que sai).
+
+A melhor forma de entender essa estrutura é pensar em uma pilha real de livros. Imagine que esses livros são muito pesados e só é possível levantar um de cada vez. Como estão literalmente empilhados, a forma de manipulá-los é removendo um por um de cima para baixo, até remover o primeiro livro da pilha.
+
+### Operações
+
+Uma pilha é capaz de realizar as seguintes operações:
+
+- Adicionar dados (empilhar).
+- Remover dados (desempilhar).
+- Ler qual é o dado que está no topo.
+
+### Usos Práticos
+
+Um exemplo clássico é o sistema de desfazer/refazer em um editor de texto. Esse conceito é amplamente utilizado em aplicações que necessitam manter um histórico de operações, permitindo ao usuário desfazer (undo) ou refazer (redo) ações.
+
+```java
+import java.util.Stack;
+
+public class EditorDeTexto {
+    private Stack<String> historicoDesfazer;
+    private Stack<String> historicoRefazer;
+    private String textoAtual;
+
+    public EditorDeTexto() {
+        historicoDesfazer = new Stack<>();
+        historicoRefazer = new Stack<>();
+        textoAtual = "";
+    }
+
+    public void escrever(String novoTexto) {
+        historicoDesfazer.push(textoAtual);
+        textoAtual = textoAtual + novoTexto;
+        historicoRefazer.clear();
+    }
+
+    public void desfazer() {
+        if (!historicoDesfazer.isEmpty()) {
+            historicoRefazer.push(textoAtual);
+            textoAtual = historicoDesfazer.pop();
+        } else {
+            System.out.println("Nada para desfazer.");
+        }
+    }
+
+    public void refazer() {
+        if (!historicoRefazer.isEmpty()) {
+            historicoDesfazer.push(textoAtual);
+            textoAtual = historicoRefazer.pop();
+        } else {
+            System.out.println("Nada para refazer.");
+        }
+    }
+
+    public void mostrarTexto() {
+        System.out.println("Texto Atual: " + textoAtual);
+    }
+
+    public static void main(String[] args) {
+        EditorDeTexto editor = new EditorDeTexto();
+
+        editor.escrever("Olá, ");
+        editor.mostrarTexto(); // Saída: Olá, 
+
+        editor.escrever("mundo!");
+        editor.mostrarTexto(); // Saída: Olá, mundo!
+
+        editor.desfazer();
+        editor.mostrarTexto(); // Saída: Olá, 
+
+        editor.desfazer();
+        editor.mostrarTexto(); // Saída: 
+
+        editor.refazer();
+        editor.mostrarTexto(); // Saída: Olá, 
+
+        editor.refazer();
+        editor.mostrarTexto(); // Saída: Olá, mundo!
+    }
+}
+```
+
+## Fila
+
+Seguindo a ideia de estruturas com controle de manipulação, temos as filas. O próprio nome já diz muito, principalmente quando pensamos em uma fila de mercado, no qual o primeiro que chega é o primeiro a ser atendido e sair do mercado (FIFO - First In First Out - Primeiro que entra, primeiro que sai).
+
+### Operações
+
+Uma fila é capaz de realizar as seguintes operações:
+
+- Adicionar dados (entrar no final da fila).
+- Remover dados (tirar o primeiro da fila).
+- Ler qual dado é o primeiro da fila.
+
+### Usos Práticos
+
+Imagine que temos um sistema que gerencia os pedidos dos clientes. Os pedidos são processados na ordem em que são recebidos, o que faz da fila a estrutura de dados ideal para essa situação.
+
+```java
+import java.util.LinkedList;
+import java.util.Queue;
+
+public class GerenciamentoDePedidos {
+    // Classe que representa um pedido
+    static class Pedido {
+        private String cliente;
+        private String produto;
+
+        public Pedido(String cliente, String produto) {
+            this.cliente = cliente;
+            this.produto = produto;
+        }
+
+        public String getCliente() {
+            return cliente;
+        }
+
+        public String getProduto() {
+            return produto;
+        }
+
+        @Override
+        public String toString() {
+            return "Pedido de " + produto + " para " + cliente;
+        }
+    }
+
+    public static void main(String[] args) {
+        // Cria uma fila para armazenar os pedidos
+        Queue<Pedido> filaDePedidos = new LinkedList<>();
+
+        // Adiciona alguns pedidos à fila
+        filaDePedidos.add(new Pedido("João", "Notebook"));
+        filaDePedidos.add(new Pedido("Maria", "Smartphone"));
+        filaDePedidos.add(new Pedido("Carlos", "Tablet"));
+
+        // Processa os pedidos na ordem em que foram recebidos
+        while (!filaDePedidos.isEmpty()) {
+            Pedido pedidoAtual = filaDePedidos.poll();
+            processarPedido(pedidoAtual);
+        }
+    }
+
+    // Método que simula o processamento de um pedido
+    public static void processarPedido(Pedido pedido) {
+        System.out.println("Processando " + pedido);
+    }
+}
+```
+
+## Deque
+
+Por fim, o último deste post e um dos menos comentados é o deque. Apesar de não ser muito retratado, é simples de entender. O deque é basicamente uma fila de duas pontas, na qual podemos adicionar e remover elementos no começo ou no final da fila. A palavra “deque” é uma abreviação de **d**ouble-**e**nded **que**ue (fila de duas pontas). Portanto, conteúdos em inglês também utilizam a palavra deque.
+
+Um exemplo simples seria a ideia do ônibus urbano, que possui porta na frente e porta no fundo. O mais comum é entrar pela porta da frente e sair pela de trás, mas existem exceções, como no caso de pessoas idosas que não pagam mais para andar de ônibus e muitas vezes já entram direto na porta dos fundos. Também há casos em que pessoas sentam antes de passar pela catraca e terão que pagar ao chegar no terminal, saindo pela frente.
+
+### Operações
+
+Um deque é capaz de realizar as seguintes operações:
+
+- Adicionar e remover dados no começo.
+- Adicionar e remover dados no final.
+- Ler qual dado é o primeiro e qual dado é o último do deque.
+
+### Usos Práticos
+
+Vamos supor que estamos desenvolvendo um sistema de atendimento ao cliente onde as solicitações podem ser adicionadas tanto no início (para tarefas de alta prioridade) quanto no final da fila (para tarefas de prioridade normal). Além disso, as tarefas podem ser processadas a partir de ambas as extremidades da fila.
+
+```java
+import java.util.ArrayDeque;
+import java.util.Deque;
+
+public class SistemaDeAtendimento {
+    private Deque<String> filaDeAtendimento;
+
+    public SistemaDeAtendimento() {
+        filaDeAtendimento = new ArrayDeque<>();
+    }
+
+    // Adicionar uma tarefa de alta prioridade (no início da fila)
+    public void adicionarTarefaAltaPrioridade(String tarefa) {
+        filaDeAtendimento.addFirst(tarefa);
+    }
+
+    // Adicionar uma tarefa de prioridade normal (no final da fila)
+    public void adicionarTarefaPrioridadeNormal(String tarefa) {
+        filaDeAtendimento.addLast(tarefa);
+    }
+
+    // Processar a próxima tarefa (do início da fila)
+    public String processarProximaTarefa() {
+        return filaDeAtendimento.pollFirst();
+    }
+
+    // Processar a última tarefa (do final da fila)
+    public String processarUltimaTarefa() {
+        return filaDeAtendimento.pollLast();
+    }
+
+    // Verificar se a fila está vazia
+    public boolean isFilaVazia() {
+        return filaDeAtendimento.isEmpty();
+    }
+
+    public static void main(String[] args) {
+        SistemaDeAtendimento sistema = new SistemaDeAtendimento();
+
+        // Adicionando tarefas na fila
+        sistema.adicionarTarefaPrioridadeNormal("Atendimento ao cliente A");
+        sistema.adicionarTarefaPrioridadeNormal("Atendimento ao cliente B");
+        sistema.adicionarTarefaAltaPrioridade("Atendimento urgente ao cliente C");
+
+        // Processando as tarefas
+        while (!sistema.isFilaVazia()) {
+            System.out.println("Processando: " + sistema.processarProximaTarefa());
+        }
+    }
+}
+```

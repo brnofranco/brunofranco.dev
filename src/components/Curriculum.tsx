@@ -3,31 +3,28 @@
 import { ReactNode } from 'react';
 
 const Title = ({ title }: { title: string }) => (
-	<>
-		<h3 className="text-foreground mt-4 text-justify text-2xl font-bold opacity-80">{title}</h3>
-		<hr className="bg-divider h-[2px] w-full border-t-2 border-none" />
-	</>
+	<h2 className="border-border text-foreground mt-4 border-b pb-3 text-xl font-semibold">{title}</h2>
 );
 
 const Topic = ({ title, complement }: { title: string; complement?: string }) => (
-	<div className="flex items-center justify-between">
-		<h4 className="text-title text-justify font-bold xl:text-xl">{title}</h4>
-		{complement ? <p className="text-xs opacity-80 xl:text-base">{complement}</p> : null}
+	<div className="flex flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between">
+		<h3 className="text-title font-semibold xl:text-lg">{title}</h3>
+		{complement ? <p className="text-text-muted text-xs xl:text-sm">{complement}</p> : null}
 	</div>
 );
 
 const SubTopic = ({ title, complement }: { title: string; complement?: string }) => (
-	<div className="flex items-center justify-between">
-		<p className="text-sm italic opacity-50 xl:text-base">{title}</p>
-		{complement ? <p className="text-xs opacity-80 xl:text-base">{complement}</p> : null}
+	<div className="flex flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between">
+		<p className="text-text-muted text-sm italic">{title}</p>
+		{complement ? <p className="text-text-muted text-xs xl:text-sm">{complement}</p> : null}
 	</div>
 );
 
-const Text = ({ children }: { children: ReactNode }) => <p className="text-justify text-lg">{children}</p>;
+const Text = ({ children }: { children: ReactNode }) => <p className="text-text-subtle leading-7">{children}</p>;
 
 const List = ({ children }: { children: ReactNode }) => <ul className="list-inside list-disc">{children}</ul>;
 
-const ListValue = ({ children }: { children: ReactNode }) => <li className="text-justify xl:text-lg">{children}</li>;
+const ListValue = ({ children }: { children: ReactNode }) => <li className="text-text-subtle leading-7">{children}</li>;
 
 export default function Curriculum() {
 	return (
@@ -42,7 +39,8 @@ export default function Curriculum() {
 					<Text>
 						System Design, Bancos de Dados, Kafka, Cloud Computing, Serverless, DDD, SOLID, Design Patterns,
 						Hexagonal, Clean Architecture, Microsserviços, Design Patterns e Caching, Kubernetes,
-						Infrastructure as Code, Observabilidade, Liderança, Marketing Pessoal e Empreendedorismo.
+						Infrastructure as Code, Observabilidade, Arquitetura com IA, Liderança, Marketing Pessoal e
+						Empreendedorismo.
 					</Text>
 				</div>
 
@@ -75,18 +73,13 @@ export default function Curriculum() {
 							<List>
 								<ListValue>
 									Hoje atuo como desenvolvedor back-end para um sistema interno de uma empresa
-									multinacional alimentícia.
-								</ListValue>
-								<ListValue>
-									Utilizo Node com NestJS e Typescript para criar APIs RESTful. Utilizo Go para criar
-									serviços de processamento de dados.
+									multinacional alimentícia. Utilizo Node com NestJS e Typescript para criar APIs
+									RESTful. Utilizo Go para criar serviços de processamento de dados.
 								</ListValue>
 								<ListValue>
 									Atuei como desenvolvedor front-end mobile em um aplicativo interno para uma empresa
-									multinacional alimentícia.
-								</ListValue>
-								<ListValue>
-									Utilizei React Native e Typescript para criar uma interface de usuário.
+									multinacional alimentícia. Utilizei React Native e Typescript para criar uma
+									interface de usuário.
 								</ListValue>
 							</List>
 						</div>
@@ -97,14 +90,13 @@ export default function Curriculum() {
 							<List>
 								<ListValue>
 									Atuei como desenvolvedor back-end em um projeto de integração de sistemas para uma
-									empresa multinacional alimentícia.
+									empresa multinacional alimentícia. Utilizei Node e Typescript para criar serviços
+									PubSub.
 								</ListValue>
-								<ListValue>Utilizei Node e Typescript para criar serviços PubSub.</ListValue>
 								<ListValue>
 									Atuei como desenvolvedor back-end em um sistema interno para uma empresa de
-									telecomunicações.
+									telecomunicações. Utilizei Java e Spring Boot para criar APIs RESTful.
 								</ListValue>
-								<ListValue>Utilizei Java e Spring Boot para criar APIs RESTful.</ListValue>
 							</List>
 						</div>
 
@@ -114,11 +106,8 @@ export default function Curriculum() {
 							<List>
 								<ListValue>
 									Atuei como front-end em um projeto de automação de trades para uma empresa grande de
-									commodities.
-								</ListValue>
-								<ListValue>Utilizei Next.js e Tailwind para criar uma interface de usuário.</ListValue>
-								<ListValue>
-									Criei testes unitários com Jest e testes de componentes utilizando Cypress.
+									commodities. Utilizei Next.js e Tailwind para criar uma interface de usuário. Criei
+									testes unitários com Jest e testes de componentes utilizando Cypress.
 								</ListValue>
 							</List>
 						</div>

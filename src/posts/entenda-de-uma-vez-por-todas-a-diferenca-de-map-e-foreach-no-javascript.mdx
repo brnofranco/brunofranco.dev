@@ -1,0 +1,72 @@
+---
+id: entenda-de-uma-vez-por-todas-a-diferenca-de-map-e-foreach-no-javascript
+title: 'Entenda de uma vez por todas a diferença de map e forEach no JavaScript'
+slug: entenda-de-uma-vez-por-todas-a-diferenca-de-map-e-foreach-no-javascript
+preview: 'Se você é um estudante de JavaScript iniciante, com certeza já se deparou com os métodos “map” e “forEach”, e se perguntou: que diferença eles têm afinal?  Bom, primeiramente, ambos são métodos padrões da classe Array que podem ser chamados em qualquer instância de uma variável do tipo Array. Apesar de serem parecidos, ambos possuem propósitos diferentes...'
+date: '2024-05-31T23:28:05+01:00'
+coverPath: /images/posts/entenda-de-uma-vez-por-todas-a-diferenca-de-map-e-foreach-no-javascript.jpg
+categories:
+  - id: javascript
+    title: JavaScript
+  - id: fundamentos
+    title: Fundamentos
+---
+
+Se você é um estudante de JavaScript iniciante, com certeza já se deparou com os métodos **map()** e **forEach()**, e se perguntou: que diferença eles têm afinal?
+
+Bom, primeiramente, ambos são métodos padrões da classe Array que podem ser chamados em qualquer instância de uma variável do tipo Array. Apesar de serem parecidos, ambos possuem propósitos diferentes.
+
+Você se depara com o seguinte problema:
+
+```javascript
+// Desafio: Adicione ao final de cada carro o texto "1.0" referente à sua potência
+const carros = ['Palio', 'Uno', 'Celta', 'Fox', 'Marea Turbo'];
+```
+
+Sei que você já manja de estruturas de laços e sabe que a melhor forma de resolver o nosso problema é utilizar uma estrutura que percorra cada um dos valores dessa lista, assim adicionando ao final “1.0”.
+
+A princípio, você pode ter pensado na seguinte abordagem:
+
+```javascript
+// Isso
+for (let i = 0; i < carros.length; i++) {
+  carros[i] = `${carros[i]} 1.0`;
+}
+```
+
+Que funciona, parabéns!
+
+Porém, chegou a hora de aprender uma abordagem melhor, utilizar algo próprio da linguagem para não precisar criar uma variável de índice (i) apenas para percorrer nosso Array.
+
+E é aí que entra o **forEach()**:
+
+```javascript
+// É igual isso
+carros.forEach((carro, index) => {
+  carros[index] = `${carro} 1.0`;
+});
+```
+
+No caso acima, o **forEach()** recebe uma *callback*, que é essa *Arrow Function* que estamos passando para alterar os valores do nosso Array. 
+
+Portanto, o método percorre cada índice no nosso Array, e para cada um deles ele utiliza essa callback para fazer a adição do texto no seu valor. 
+
+Então, o parâmetro **carro** muda a cada índice que o método percorre, e o parâmetro **index** também muda, sendo cada índice (como o valor i) do Array.
+
+Em ambas as abordagens acima, estamos sobrescrevendo nosso Array principal (carros). Porém, existem cenários em que não seria ideal sobrescrever a nossa lista original. Pode ser que precisemos reutilizá-la para outros contextos, quem sabe, para definir outras potências.
+
+Nesse caso, temos nosso método **map()**:
+
+```javascript
+const carros1000 = carros.map((carro) => {
+  return `${carro} 1.0`;
+});
+```
+
+Neste caso, estamos criando uma nova variável **carros1000**, na qual estamos percorrendo nosso Array de carros e, para cada carro, estamos retornando seu valor atualizado com o “1.0” que será adicionado na nova variável. Com isso, agora temos um novo Array específico para os carros 1.0 e o nosso Array original intacto para ser reutilizado em outros contextos.
+
+Para saber mais, recomendo fortemente sempre ler as documentações:
+
+[MDN Web Docs - map()](https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Reference/Global_Objects/Array/map)
+
+[MDN Web Docs - forEach()](https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Reference/Global_Objects/Array/forEach)

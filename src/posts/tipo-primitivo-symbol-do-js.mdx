@@ -1,0 +1,55 @@
+---
+id: tipo-primitivo-symbol-do-js
+title: 'Tipo primitivo Symbol do JS: conhecia esse tipo?'
+slug: tipo-primitivo-symbol-do-js
+preview: 'No ecossistema JavaScript, existem diversos tipos de dados primitivos que todos conhecemos, que são “comuns” na maioria das linguagens, tais como number, string, boolean, null, e mais específico, undefined. Porém, há um outro tipo que de todos é o menos explorado, sendo o Symbol...'
+date: '2024-06-28T12:31:44+01:00'
+coverPath: /images/posts/tipo-primitivo-symbol-do-js.jpg
+categories:
+  - id: javascript
+    title: JavaScript
+  - id: fundamentos
+    title: Fundamentos
+---
+
+No ecossistema JavaScript, existem diversos tipos de dados primitivos que todos conhecemos, que são “comuns” na maioria das linguagens, tais como `number`, `string`, `boolean`, `null`, e mais específico, `undefined`. Porém, há um outro tipo que de todos é o menos explorado, sendo o `Symbol`.
+
+### O nome diz muito e também não diz nada, afinal o que é um Symbol?
+
+Introduzido no ECMAScript 2015 (ES6), o `Symbol` é um tipo de dado primitivo cujo valor é único e imutável. Eles são frequentemente utilizados para identificar propriedades de objetos de forma que não haja colisões de nomes.
+
+Para criar um `Symbol`, utiliza-se a função `Symbol()`:
+
+```javascript
+const symbol1 = Symbol();
+const symbol2 = Symbol('description');
+```
+
+Cada vez que `Symbol()` é chamado, um valor de `Symbol` único é gerado. Mesmo que dois `Symbols` sejam criados com a mesma descrição, eles serão diferentes entre si:
+
+```javascript
+const symbol1 = Symbol('example');
+const symbol2 = Symbol('example');
+
+console.log(symbol1 === symbol2); // false
+```
+
+### E quando é utilizado?
+
+Eles podem ser usados para evitar colisões de nomes e proporcionar um maior grau de encapsulamento e segurança, especialmente em bibliotecas e frameworks.
+
+Ao usar `Symbols` como propriedades de objetos, evita-se que essas propriedades sejam acessadas ou sobrescritas acidentalmente, já que os `Symbols` são, por padrão, não enumeráveis.
+
+```javascript
+let object = {};
+let id = Symbol('id');
+
+meuObjeto[id] = 12345;
+
+console.log(object[id]); // 12345
+console.log(object); // { [Symbol(id)]: 12345 }
+```
+
+Muitas APIs modernas, como iteradores e descritores de propriedade, utilizam `Symbols`. Permitem utilizar de outras propriedades da função que podem auxiliar no desenvolvimento da aplicação, como isRegExp, iterator, hasInstance etc.
+
+Caso queira se aprofundar, recomendo a leitura no site oficial da MDN: [Símbolo](https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Reference/Global_Objects/Symbol#symbol.iterator).

@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import './global.css';
 import PageLayout from '../components/PageLayout';
-import { Caudex, Metamorphous, Noto_Serif } from 'next/font/google';
+import { DM_Sans, Lora, Poppins } from 'next/font/google';
 import { config } from '@/shared/config';
 
 export const metadata: Metadata = {
@@ -45,19 +45,19 @@ export const metadata: Metadata = {
 	},
 };
 
-const bodyFont = Noto_Serif({
+const bodyFont = DM_Sans({
 	subsets: ['latin'],
-	weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900'],
+	weight: ['400', '500', '600', '700'],
 	variable: '--font-body',
 });
 
-const displayFont = Caudex({
+const displayFont = Poppins({
 	subsets: ['latin'],
-	weight: '400',
+	weight: ['400', '500', '600', '700'],
 	variable: '--font-display',
 });
 
-const titleFont = Metamorphous({
+const titleFont = Lora({
 	subsets: ['latin'],
 	weight: '400',
 	variable: '--font-title',
@@ -65,7 +65,11 @@ const titleFont = Metamorphous({
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
 	return (
-		<html lang="pt-br" className={`${bodyFont.variable} ${displayFont.variable} ${titleFont.variable}`}>
+		<html
+			lang="pt-br"
+			className={`${bodyFont.variable} ${displayFont.variable} ${titleFont.variable}`}
+			suppressHydrationWarning
+		>
 			<body>
 				<PageLayout>{children}</PageLayout>
 			</body>

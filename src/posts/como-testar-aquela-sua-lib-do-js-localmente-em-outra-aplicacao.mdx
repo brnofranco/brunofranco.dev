@@ -1,0 +1,58 @@
+---
+id: como-testar-aquela-sua-lib-do-js-localmente-em-outra-aplicacao
+title: 'Como testar aquela sua lib do JS localmente em outra aplicação'
+slug: como-testar-aquela-sua-lib-do-js-localmente-em-outra-aplicacao
+preview: 'Caso você já tenha feito uma lib, ou teve que fazer alguma alteração naquela lib interna que você usa nos microsserviços do trampo, voce já deve ter se deparado com essa questão.  Depois de ter feito a alteração, ajustou aqueles testes unitários e ficou todo pimposo pensando: como que eu debugo esse trem agora?...'
+date: '2024-05-18T21:14:57+01:00'
+coverPath: /images/posts/como-testar-aquela-sua-lib-do-js-localmente-em-outra-aplicacao.jpg
+categories:
+  - { id: javascript, title: JavaScript }
+  - { id: testes, title: Testes }
+  - { id: ferramentas, title: Ferramentas }
+---
+
+Caso você já tenha feito uma lib, ou teve que fazer alguma alteração naquela lib interna que você usa nos microsserviços do trampo, você já deve ter se deparado com essa questão.
+
+Depois de ter feito a alteração, ajustou aqueles testes unitários e ficou todo pimposo pensando: como que eu debugo esse trem agora?
+
+A primeira ideia que me passou a cabeça quando eu me peguei nesse cenário foi criar um arquivo temporário no próprio projeto da lib e tentar recriar algum cenário possível de uso daquela minha alteração. No final das contas, é exatamente isso que você está fazendo nos testes unitários.
+
+Agora, se você está trabalhando em um microsserviço e aquela alteração precisa estar na biblioteca que você também alterou, uma excelente alternativa ao npm link é utilizar o empacotamento local com o npm pack.
+
+Para fazer isso, siga o passo a passo abaixo:
+
+1. Entre na pasta da lib com as novas alterações:
+   ```bash
+   cd /caminho/para/sua-lib
+   ```
+
+2. Certifique-se de que as dependências estão atualizadas:
+   ```bash
+   npm install
+   ```
+
+3. Faça o build do projeto:
+   ```bash
+   npm run build // ou o comando equivalente para gerar os arquivos finais
+   ```
+
+4. Empacote a biblioteca gerando um arquivo compactado `.tgz`:
+   ```bash
+   npm pack
+   ```
+   *(Esse comando gera um arquivo compactado na raiz do projeto da lib).*
+
+5. Copie o caminho absoluto (path total) do arquivo `.tgz` gerado.
+
+6. Entre no seu serviço no qual quer usar a lib atualizada:
+   ```bash
+   cd /caminho/para/seu-projeto
+   ```
+
+7. Instale a biblioteca apontando diretamente para o caminho do arquivo compactado:
+   ```bash
+   npm install <path-total-copiado-do-arquivo.tgz>
+   ```
+   *(Ele vai instalar a lib por cima da que já existe, caso ela já esteja presente no seu projeto).*
+
+Desta forma é possível utilizar a lib atualizada em qualquer repositório localmente com segurança, simulando exatamente um pacote real, sem precisar subir uma nova versão dela no registry para depois testá-la.

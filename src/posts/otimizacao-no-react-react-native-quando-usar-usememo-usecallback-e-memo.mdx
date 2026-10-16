@@ -1,0 +1,182 @@
+---
+id: otimizacao-no-react-react-native-quando-usar-usememo-usecallback-e-memo
+title: 'Otimização no React / React Native: quando usar useMemo, useCallback e memo'
+slug: otimizacao-no-react-react-native-quando-usar-usememo-usecallback-e-memo
+preview: 'Quando desenvolvemos sites e aplicativos, a performance é um fator muito importante, principalmente quando lidamos com componentes pesados que re-renderizam frequentemente. Uma boa forma de lidar com isso no React / React Native é a utilização dos hooks useMemo, useCallback e memo. Vamos ver um exemplo simples que explica o uso de cada um...'
+date: '2025-03-24T00:24:29+00:00'
+coverPath: /images/posts/otimizacao-no-react-react-native-quando-usar-usememo-usecallback-e-memo.jpg
+categories:
+  - id: react
+    title: React
+  - id: performance
+    title: Performance
+  - id: javascript
+    title: JavaScript
+---
+
+Quando desenvolvemos sites e aplicativos, a performance é um fator muito importante, principalmente quando lidamos com componentes pesados que re-renderizam frequentemente. Uma boa forma de lidar com isso no React / React Native é a utilização dos hooks *useMemo*, *useCallback* e *memo*. Vamos ver um exemplo simples que explica o uso de cada um.
+
+## Exemplo de Projeto React Native
+
+Vamos começar com um componente que renderiza uma lista de itens (nesse caso números) e permite adicionar novos itens a essa lista.
+
+```typescript
+import { useState } from 'react';
+import { View, Text, Button, FlatList } from 'react-native';
+
+export default function App() {
+  const [items, setItems] = useState([1, 2, 3]);
+
+  const addItem = () => {
+    for (let i = 0; i < 1e7; i++) {} // Pesado
+    const newItem = items.length + 1;
+    setItems([...items, newItem]);
+  };
+
+  return (
+    <View>
+      <Button title="Add Item" onPress={addItem} />
+      <FlatList
+        data={items}
+        keyExtractor={(item) => item.toString()}
+        renderItem={({ item }) => <Text>Item {item}</Text>}
+      />
+    </View>
+  );
+}
+
+```
+
+Neste exemplo, toda vez que um novo item é adicionado, o componente *App* re-renderiza, e a lista inteira é re-renderizada também. Por conta da simplicidade, adicionei um for loop bem comprido para demonstrar gargalo de performance, pois sem isso não é necessário se precupar com otimização.
+
+### Passo 1: Usando ***memo*** para evitar re-renders desnecessários
+
+O *memo* é uma função que envolve um componente para evitar re-renders desnecessários quando as props não mudam. Vamos criar um componente *ListItem *e envolver ele com *memo*.
+
+```tsx
+import { memo } from 'react';
+import { Text } from 'react-native';
+
+const ListItemComponent = ({ item }: { item: number }) => {
+  console.log(`Renderizando ${item}`);
+
+  return <Text>Item {item}</Text>;
+};
+
+export const ListItem = memo(ListItemComponent);
+
+```
+
+Agora, no componente App, vamos usar o ListItem:
+
+```tsx
+import { useState } from 'react';
+import { View, Button, FlatList } from 'react-native';
+import { ListItem } from './ListItem';
+
+export default function App() {
+  const [items, setItems] = useState([1, 2, 3]);
+
+  const addItem = () => {
+    for (let i = 0; i < 1e7; i++) {} // Pesado
+    const newItem = items.length + 1;
+    setItems([...items, newItem]);
+  };
+
+  return (
+    <View>
+      <Button title="Add Item" onPress={addItem} />
+      <FlatList
+        data={items}
+        keyExtractor={(item) => item.toString()}
+        renderItem={({ item }) => <ListItem item={item} />}
+      />
+    </View>
+  );
+}
+
+```
+
+Agora, ao adicionar um novo item, apenas o novo *ListItem* será renderizado, e os itens existentes não serão re-renderizados. Inclusive, qualquer re-renderização que acontecesse na tela, mesmo não envolvendo *items*, gerava uma re-renderização de todos.
+
+### Passo 2: Usando *useCallback* para memoizar funções
+
+O *useCallback* é um hook que memoiza uma função, evitando que ela seja recriada em cada renderização. Isso é útil quando passamos funções como props para componentes filhos.
+
+Vamos modificar a função *addItem* para usar *useCallback*:
+
+```tsx
+import { useCallback, useState } from 'react';
+import { View, Button, FlatList } from 'react-native';
+import { ListItem } from './ListItem';
+
+export default function App() {
+  const [items, setItems] = useState([1, 2, 3]);
+
+  const addItem = useCallback(() => {
+    for (let i = 0; i < 1e7; i++) {} // Pesado
+    const newItem = items.length + 1;
+    setItems((prevItems) => [...prevItems, newItem]);
+  }, [items]);
+
+  return (
+    <View>
+      <Button title="Add Item" onPress={addItem} />
+      <FlatList
+        data={items}
+        keyExtractor={(item) => item.toString()}
+        renderItem={({ item }) => <ListItem item={item} />}
+      />
+    </View>
+  );
+}
+
+```
+
+Agora, a função *addItem* só será recriada quando o array *items* mudar, o que ajuda a evitar re-renders desnecessários.
+
+### Passo 3: Usando *useMemo* para memoizar valores
+
+O *useMemo* é um hook que memoiza um valor, evitando que ele seja recalculado em cada renderização. Isso é útil quando temos cálculos pesados que não precisam ser refeitos a menos que suas dependências mudem.
+
+Vamos supor que queremos calcular a soma de todos os itens da lista e exibi-la. Podemos usar *useMemo* para memorizar esse cálculo:
+
+```tsx
+import { useCallback, useMemo, useState } from 'react';
+import { View, Button, FlatList, Text } from 'react-native';
+import { ListItem } from './ListItem';
+
+export default function App() {
+  const [items, setItems] = useState([1, 2, 3]);
+
+  const addItem = useCallback(() => {
+    const newItem = items.length + 1;
+    setItems((prevItems) => [...prevItems, newItem]);
+  }, [items]);
+
+  const total = useMemo(() => {
+    console.log('Calculando o total...');
+    for (let i = 0; i < 1e7; i++) {} // Pesado
+    return items.reduce((sum, item) => sum + item, 0);
+  }, [items]);
+
+  return (
+    <View>
+      <Button title="Add Item" onPress={addItem} />
+      <Text>Total: {total}</Text>
+      <FlatList
+        data={items}
+        keyExtractor={(item) => item.toString()}
+        renderItem={({ item }) => <ListItem item={item} />}
+      />
+    </View>
+  );
+}
+
+```
+
+Agora, o cálculo do total só será refeito quando o array *items* mudar, evitando cálculos desnecessários em cada renderização. Novamente, adicionei um for loop para pesar o método e fazer sentido usar o *useMemo*.
+
+### Conclusão
+
+Lembre-se de que otimizações prematuras podem levar a código mais complexo e seu uso errado pode fazer com que a performance diminua, então é importante medir a performance antes e depois de aplicar esses hooks para ver se faz sentido com o fluxo.

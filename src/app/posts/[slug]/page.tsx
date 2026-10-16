@@ -1,21 +1,11 @@
 import { redirect } from 'next/navigation';
-import getPostBySlug from '@/services/getPostBySlug';
-import { RenderBlockContext, ResponsiveImageType, SRCImage, StructuredText } from 'react-datocms';
+import Image from 'next/image';
+import getPostBySlug, { getAllPosts } from '@/services/getPosts';
 import { getFormattedDate } from '@/shared/dayjs';
-import SyntaxHighlighter from 'react-syntax-highlighter';
-import { atomOneDark } from 'react-syntax-highlighter/dist/esm/styles/hljs';
-import CopyButton from '../../../components/CopyButton';
 import Comments from '@/components/Comments';
+import { MDXRemote } from 'next-mdx-remote/rsc';
 import type { Metadata } from 'next';
-import getAllPostSlugs, { PostSlugData } from '@/services/getAllPostSlugs';
-
-interface Record {
-	id: string;
-	__typename: string;
-	image: { responsiveImage: ResponsiveImageType };
-	[prop: string]: unknown;
-	codeBlock: { value: { document: { children: [{ language: string; code: string }] } } };
-}
+import { getMDXComponents } from '@/hooks/useMDXComponents';
 
 interface PostProps {
 	params: Promise<{ slug: string }>;
@@ -59,8 +49,8 @@ function buildKeywords(title: string, slug: string): string[] {
 }
 
 export async function generateStaticParams() {
-	const posts = await getAllPostSlugs();
-	return posts.map((post: PostSlugData) => ({ slug: post.slug }));
+	const posts = await getAllPosts();
+	return posts.map((post) => ({ slug: post.slug }));
 }
 
 export async function generateMetadata({ params }: PostProps): Promise<Metadata> {
@@ -71,7 +61,6 @@ export async function generateMetadata({ params }: PostProps): Promise<Metadata>
 
 	const description = buildSeoDescription(post.title, post.preview);
 	const keywords = buildKeywords(post.title, slug);
-	const coverImage = post.cover?.responsiveImage;
 	const canonicalPath = `/posts/${slug}`;
 
 	return {
@@ -90,24 +79,15 @@ export async function generateMetadata({ params }: PostProps): Promise<Metadata>
 			description,
 			type: 'article',
 			url: canonicalPath,
-			publishedTime: post._createdAt,
-			...(coverImage?.src && {
-				images: [
-					{
-						url: coverImage.src as string,
-						width: coverImage.width,
-						height: coverImage.height ?? undefined,
-						alt: coverImage.alt || post.title,
-					},
-				],
-			}),
+			publishedTime: post.date,
+			images: [{ url: post.coverPath, alt: post.title }],
 		},
 		twitter: {
 			card: 'summary_large_image',
 			title: post.title,
 			description,
 			creator: '@brnofranco',
-			...(coverImage?.src && { images: [coverImage.src as string] }),
+			images: [post.coverPath],
 		},
 	};
 }
@@ -120,44 +100,32 @@ export default async function Post({ params }: Readonly<PostProps>) {
 		redirect('/404');
 	}
 
-	const renderBlock = ({ record }: RenderBlockContext<Record>) => {
-		if (record.__typename === 'ImageBlockRecord') {
-			return <SRCImage data={record.image.responsiveImage} />;
-		}
-
-		if (record.__typename === 'CodeBlockRecord') {
-			const codeData = record.codeBlock.value.document.children[0];
-
-			return (
-				<div className="flex w-full items-start justify-between bg-[#282c34]">
-					<SyntaxHighlighter language={codeData.language} style={atomOneDark}>
-						{codeData.code}
-					</SyntaxHighlighter>
-					<div className="flex p-3">
-						<CopyButton code={codeData.code} />
-					</div>
-				</div>
-			);
-		}
-
-		return null;
-	};
+	const components = getMDXComponents();
 
 	return (
 		<>
 			<div className="h-full w-full flex-2">
 				<div className="flex h-full w-full justify-center">
 					<div key={post.id} className="h-full w-full">
-						<h1 className="text-foreground mb-8 text-center text-4xl font-bold opacity-80">{post.title}</h1>
+						<h1 className="text-title mb-6 text-center text-3xl leading-tight font-semibold sm:text-4xl">
+							{post.title}
+						</h1>
 
 						<p className="text-text-muted mb-10 text-center text-sm">
-							Publicado em {getFormattedDate(post._createdAt)}
+							Publicado em {getFormattedDate(post.date)}
 						</p>
 
-						<SRCImage data={post.cover.responsiveImage} imgClassName="mb-12" />
+						<Image
+							src={post.coverPath}
+							alt={post.title}
+							width={1920}
+							height={1080}
+							className="mb-12 h-auto w-full"
+							priority
+						/>
 
 						<div className="structured-data">
-							<StructuredText data={post.content} renderBlock={renderBlock} />
+							<MDXRemote source={post.content} components={components} />
 						</div>
 					</div>
 				</div>

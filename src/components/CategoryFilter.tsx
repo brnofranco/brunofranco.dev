@@ -1,10 +1,11 @@
 'use client';
 
 import { useRef, useState, useEffect } from 'react';
-import { CategoryData } from '@/components/PostPreview';
+import { FaFilter } from 'react-icons/fa';
+import type { PostCategory } from '@/services/getPosts';
 
 interface CategoryFilterProps {
-	allCategories: CategoryData[];
+	allCategories: PostCategory[];
 	selectedIds: Set<string>;
 	onToggleCategory: (id: string) => void;
 	onClear: () => void;
@@ -34,16 +35,21 @@ export default function CategoryFilter({
 			<button
 				type="button"
 				onClick={() => setIsOpen((prev) => !prev)}
-				className="bg-surface hover:bg-surface-hover border-border flex h-full cursor-pointer items-center justify-center gap-3 border px-4 py-3 text-xs font-semibold tracking-[0.24em] uppercase shadow-md transition"
+				aria-expanded={isOpen}
+				aria-haspopup="true"
+				className="bg-surface text-text-muted hover:bg-surface-hover hover:text-foreground border-border flex h-9 cursor-pointer items-center justify-center gap-2 border px-3 text-xs font-semibold tracking-[0.12em] uppercase transition"
 			>
+				<FaFilter aria-hidden="true" className="text-[0.65rem]" />
 				<span>Filtrar</span>
 				{selectedIds.size > 0 ? (
-					<span className="bg-background border-border border px-2 py-0.5 text-xs">{selectedIds.size}</span>
+					<span className="bg-background border-border text-foreground border px-1.5 py-0.5 text-[0.65rem] leading-none">
+						{selectedIds.size}
+					</span>
 				) : null}
 			</button>
 
 			{isOpen ? (
-				<div className="bg-surface border-border absolute z-10 mt-3 w-64 border p-4 shadow-xl xl:right-0">
+				<div className="bg-surface border-border absolute right-0 z-10 mt-3 w-64 border p-4 shadow-xl">
 					<div className="mb-3 flex items-center justify-between">
 						<p className="text-foreground text-xs font-semibold tracking-[0.24em] uppercase">Categorias</p>
 						<button

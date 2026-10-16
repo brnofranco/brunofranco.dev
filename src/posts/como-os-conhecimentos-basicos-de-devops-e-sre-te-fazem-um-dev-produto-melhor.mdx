@@ -1,0 +1,61 @@
+---
+id: como-os-conhecimentos-basicos-de-devops-e-sre-te-fazem-um-dev-produto-melhor
+title: 'Como os conhecimentos básicos de DevOps e SRE te fazem um Dev Produto melhor'
+slug: como-os-conhecimentos-basicos-de-devops-e-sre-te-fazem-um-dev-produto-melhor
+preview: 'Não há muito tempo atrás, existiam os famosos Analistas de Sistemas, que faziam o que hoje chamaríamos de Devs Full Cycle. Estes se preocupavam com os requisitos, o desenvolvimento e o deploy em produção, no caso o SDLC (Software Development Life Cycle)...'
+date: '2026-08-18T02:39:47+01:00'
+coverPath: /images/posts/como-os-conhecimentos-basicos-de-devops-e-sre-te-fazem-um-dev-produto-melhor.jpg
+categories:
+  - id: devops
+    title: DevOps
+  - id: sre
+    title: SRE
+  - id: carreira
+    title: Carreira
+---
+
+Não há muito tempo atrás, existiam os famosos Analistas de Sistemas, que faziam o que hoje chamaríamos de Devs Full Cycle. Estes se preocupavam com os requisitos, o desenvolvimento e o deploy em produção, no caso o SDLC (Software Development Life Cycle).
+
+Com a popularização dos sistemas distribuídos e o aumento na complexidade do SDLC, o desenvolvimento do software foi quebrado em diversos profissionais diferentes com responsabilidades específicas. Então, surgiram os profissionais DevOps e SRE, responsáveis pela ponta de entrega (Shift-right).
+
+### O que é DevOps e SRE?
+
+O termo DevOps vem de Desenvolvimento e Operações de TI. Representa uma cultura de práticas para agilizar e melhorar a confiabilidade do software a partir de automações.
+
+SRE significa Engenharia de Confiabilidade de Sites. Também foca em automações, mas visando a escalabilidade e a confiabilidade.
+
+---
+
+Com essas ideias, vou apresentar alguns conceitos básicos de ambos que nós, desenvolvedores de produto, podemos tomar atenção durante nosso trabalho.
+
+### Definir um padrão de logs para melhorar Observabilidade
+
+Observabilidade é um tema muito importante para o ciclo de vida do sistema. Pode parecer que às vezes estamos só colocando mensagenzinhas para garantir que quando der algum problema a gente consiga ver onde parou, mas vai muito além.
+
+A partir dos logs e dos traces é possível gerar as métricas. Com elas conseguimos além de identificar problemas claros, entender gargalos de performance e comportamento dos usuários, sendo possível implementar uma melhoria de fluxo ou otimização de algum processo.
+
+Portanto, ter um padrão claro facilita a identificação dessas métricas. Esse padrão pode variar com a tecnologia e arquitetura do sistema. Uma recomendação de padronização base é a [Conventional Logs](https://www.conventionallogs.org/).
+
+### Se preocupar com os possíveis erros mesmo quando parecem impossíveis
+
+Todo gateway ligado ao sistema pode falhar. “Ah, mas se meu Banco de Dados cair meu sistema explode”. Bem, pode ser que essa afirmação seja por conta de uma má decisão de arquitetura. Mesmo assim, ele deveria estar preparado para cenários sérios como este, não abrindo brechas de segurança e se degradando graciosamente.
+
+Busque identificar quais são todos os gateways ligados ao sistema e entenda o que acontece se eles falharem. O que a API retorna? O que os logs apontam? Como o fluxo é impactado a nível de negócio? Existe alguma estratégia de retry? Como o front reage a esse tipo de erro? Essas perguntas já servem como norte para repensar as tratativas de falha.
+
+### Conheça os code smells mais comuns da sua linguagem
+
+É comum a integração de ferramentas como o Sonar que validam a qualidade do código ou numa Pull Request ou na esteira de Continuous Integration. Essas ferramentas servem justamente para identificar e apontar padrões de code smells no código.
+
+Um problema comum é fazer todo o sistema primeiro e depois quando estiver para subir em produção perceber que está sendo barrado pela qualidade do código abaixo do esperado pela ferramenta. Portanto, conheça os code smells e integre esse processo de melhoria durante o desenvolvimento.
+
+### Se toda vez tem que fazer esse processo manual, automatize
+
+Esse é um conceito chamado de Toil. A ideia é básica, mas é um dos pilares do SRE. Parte do dia a dia dos profissionais é conseguir reduzir ao máximo o Toil, que são as atividades manuais que precisam constantemente serem feitas. Nesse caso, essas tarefas são automatizadas.
+
+Em muitas coisas na vida podemos aplicar esse conceito. Não quer mais lavar louça? Compre uma lava louças. Não quer mais varrer o chão? Compre um robô aspirador. E por ai vai.
+
+No dia a dia do desenvolvimento de sistemas é comum cairmos em processos manuais. Configurações de ambiente local, preparação de massas mockadas etc. Percebeu que teve que fazer aquilo mais de 3 vezes é sinal que pode ser que aconteça varias outras ainda. Então, revise seus processos, identifique o que foi Toil, e brigue com seu SM para arrumar um tempo na Sprint e automatizar esse processo.
+
+---
+
+Essas foram algumas percepções que eu tive enquanto estudava os fundamentos de DevOps e SRE. Imagino que esses profissionais sejam mais valorizados nos próximos anos por conta da evolução das IAs na geração de código. Uma falha de código em nível de aplicação pode custar barato, mas uma falha em nível de infraestrutura pode sair caríssima. Então, fica minha recomendação de aprofundamento.

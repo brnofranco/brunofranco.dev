@@ -1,0 +1,180 @@
+---
+id: codigo-com-qualidade-principios-dry-kiss-e-yagni
+title: 'Código com Qualidade: Princípios DRY, KISS e YAGNI'
+slug: codigo-com-qualidade-principios-dry-kiss-e-yagni
+preview: 'Qualidade de código é um tema antigo, mas que a cada ano ganha mais destaque, principalmente com as IAs gerando código. Desde os anos 60, pessoas influentes na tecnologia debatiam melhores práticas de desenvolvimento de software. Foi em conversas como essas que começaram a surgir metodologias ágeis, padrões de projeto e arquiteturas...'
+date: '2025-08-09T14:37:16+01:00'
+coverPath: /images/posts/codigo-com-qualidade-principios-dry-kiss-e-yagni.jpg
+categories:
+  - id: qualidade-de-codigo
+    title: Qualidade de código
+  - id: boas-praticas
+    title: Boas práticas
+---
+
+Qualidade de código é um tema antigo, mas que a cada ano ganha mais destaque, principalmente com as IAs gerando código. Desde os anos 60, pessoas influentes na tecnologia debatiam melhores práticas de desenvolvimento de software. Foi em conversas como essas que começaram a surgir metodologias ágeis, padrões de projeto e arquiteturas.
+
+Neste post, vou tratar de alguns princípios de nível mais baixo, que abordam a qualidade de código propriamente dita.
+
+## Princípios
+
+### DRY
+
+Acrônimo para *“Don’t Repeat Yourself”*, que significa *“Não se repita”*. O conceito é objetivo: não repita código desnecessariamente.
+
+Exemplo básico:
+
+```typescript
+// Exemplo de repetição de código
+function calculateDiscountForRegular(product) {
+  const discount = product.price * 0.1; // 10% desconto
+  return product.price - discount;
+}
+
+function calculateDiscountForVIP(product) {
+  const discount = product.price * 0.2; // 20% desconto
+  return product.price - discount;
+}
+
+// Refatoração para evitar repetição de código
+enum CustomerType {
+  REGULAR = 0.1, // 10%
+  VIP = 0.2, // 20%
+}
+
+function calculateDiscount(product, discountRate: CustomerType) {
+  const discount = product.price * discountRate;
+  return product.price - discount;
+}
+
+const calculatedRegularDiscount = calculateDiscount(
+  { price: 200 },
+  CustomerType.REGULAR
+);
+const calculatedVipDiscount = calculateDiscount(
+  { price: 200 },
+  CustomerType.VIP
+);
+```
+
+À primeira vista, pode parecer uma refatoração ruim por ter criado mais código, mas imagine um cenário em que esse exemplo escale para diversos tipos de desconto:
+
+```typescript
+enum CustomerType {
+  REGULAR = 0.1, // 10%
+  VIP = 0.2, // 20%
+  PREMIUM = 0.15, // 15%
+  EMPLOYEE = 0.25, // 25%
+  BLACK_FRIDAY = 0.3, // 30%
+  STUDENT = 0.05, // 5%
+  SENIOR = 0.1, // 10%
+  NEW_CUSTOMER = 0.12, // 12%
+  FREQUENT_BUYER = 0.18, // 18%
+}
+```
+
+Para cada tipo de cliente, sem DRY, você multiplicaria o nível de repetição de código.
+
+---
+
+### KISS
+
+Não, não é a banda de rock (mas poderia ser). KISS significa *“Keep It Simple, Stupid!”*, traduzido como *“Mantenha isso simples, estúpido”*.
+
+O “estúpido” pode ser interpretado tanto como uma provocação ao desenvolvedor quanto ao próprio código. O conceito é simples: o código deve ser o mais simples e legível possível, evitando ao máximo complexidade desnecessária.
+
+Exemplo:
+
+```typescript
+// Exemplo de código desnecessariamente complexo
+const getDataNeedlesslyComplex = async () =>
+  await Array.from({ length: 10 }, (_, i) => i + 1)
+    .map((page) => [`https://api.example.com/data?page=${page}`])
+    .flat()
+    .map((url) => fetch(url).then((r) => r.json()))
+    .reduce(
+      async (accPromise, dataPromise) => [
+        ...(await accPromise),
+        await dataPromise,
+      ],
+      Promise.resolve([])
+    );
+  
+// Exemplo de código simplificado
+const getDataKISS = async () => {
+  const results = [];
+  for (let page = 1; page <= 10; page++) {
+    const res = await fetch(`https://api.example.com/data?page=${page}`);
+    results.push(await res.json());
+  }
+  return results;
+};
+
+```
+
+Os dois métodos fazem exatamente a mesma coisa. Para quem já está acostumado com JS, o primeiro até pode não parecer tão absurdo assim, pois está relativamente limpo e bem formatado. Porém, quando se analisa o que ele realmente faz, fica claro que ele poderia ser muito mais simples, como no segundo exemplo.
+
+---
+
+### YAGNI
+
+De todos, este é o mais direto: *“You Ain’t Gonna Need It”*, ou *“Você não vai precisar disso”*.
+
+O princípio diz que, se você não vai usar aquele código agora, ele não deve ser escrito agora.
+
+Exemplo clássico na Programação Orientada a Objetos:
+
+```typescript
+// Exemplo de YAGNI
+import { randomUUID } from "crypto";
+
+class User {
+  private id: string;
+  private name: string;
+
+  constructor(name: string, email: string) {
+    this.id = randomUUID();
+    this.name = name;
+  }
+
+  // Gera os getters e setters
+  getId(): string {
+    return this.id;
+  }
+
+  getName(): string {
+    return this.name;
+  }
+
+  setId(id: string): void {
+    this.id = id;
+  }
+
+  setName(name: string): void {
+    this.name = name;
+  }
+}
+
+```
+
+Você precisava criar sua classe `User`. Após definir os campos (`id` e `name`), pediu para a IDE gerar os getters e setters.
+
+Neste caso, você pode nem ter percebido, mas é possível sobrescrever o ID do usuário, algo contraditório, já que ele é gerado automaticamente na instanciação.
+
+Portanto, getters e setters precisam fazer sentido para o uso real. Caso contrário, não há motivo para existirem. E, no futuro, quando for realmente necessário, você poderá criá-los.
+
+Claro que este é um exemplo genérico — aqui estou ignorando aspectos de arquitetura de software e de desenvolvimento em equipe, onde às vezes criamos métodos para serem usados em outras tarefas.
+
+---
+
+## Por fim
+
+Estes são conceitos simples que servem como porta de entrada para a qualidade de código. Nos próximos posts, trarei temas mais abrangentes ou específicos e, dependendo, mais complexos ou avançados.
+
+Qualquer dúvida ou sugestão, deixe um comentário abaixo.
+
+---
+
+### Referências
+
+- [*Desenvolvimento Real de Software*](https://www.amazon.com.br/Desenvolvimento-Real-Software-projetos-fundamentos/dp/6555202017) (livro)

@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { BookCard } from '@/components/BookCard';
-import getBooks from '@/services/getBooks';
 import Link from 'next/link';
+import { getAllReadings } from '@/services/getReadings';
 
 export const metadata: Metadata = {
 	title: 'Leituras',
@@ -18,22 +18,22 @@ export const metadata: Metadata = {
 	},
 };
 
-export default async function Books() {
-	const books = await getBooks();
+export default async function Readings() {
+	const books = getAllReadings();
 
 	return (
 		<>
-			<div className="border-border flex h-full w-full flex-col justify-center gap-10 border-b pb-8">
-				<h1 className="text-foreground text-3xl font-bold uppercase">Recomendações de Leitura</h1>
+			<div className="border-border flex h-full w-full flex-col gap-3 pb-8">
+				<h1 className="text-foreground text-3xl font-semibold">Recomendações de leitura</h1>
 
-				<p className="text-justify text-xl">
+				<p className="text-text-subtle leading-7">
 					Esses são os livros que li sobre programação e as minhas mais humildes recomendações.
 				</p>
-				<p className="text-justify text-xl">
+				<p className="text-text-subtle leading-7">
 					Cada vez menos, em nossa área, as pessoas estão utilizando livros como método de estudo, tanto pela
 					velocidade da evolução das tecnologias quanto pela falta de hábito da maioria dos estudantes.
 				</p>
-				<p className="text-justify text-xl">
+				<p className="text-text-subtle leading-7">
 					Desde 2024, tenho desenvolvido o hábito da leitura. Minha motivação era ter maior facilidade e
 					velocidade em ler, que é uma habilidade importante para desenvolvedores. Por isso, sigo lendo livros
 					técnicos e de entretenimento. Conto mais sobre isso no meu{' '}
@@ -48,8 +48,8 @@ export default async function Books() {
 				</p>
 			</div>
 
-			<div className="mt-12 h-full w-full">
-				<div className="flex h-full w-full flex-col justify-center gap-12">
+			<div className="mt-2 h-full w-full">
+				<div className="flex h-full w-full flex-col justify-center">
 					{books.map((book) => (
 						<BookCard key={book.id} book={book} />
 					))}

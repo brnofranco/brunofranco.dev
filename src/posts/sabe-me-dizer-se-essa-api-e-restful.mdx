@@ -1,0 +1,145 @@
+---
+id: sabe-me-dizer-se-essa-api-e-restful
+title: 'Sabe me dizer se essa API é RESTful?'
+slug: sabe-me-dizer-se-essa-api-e-restful
+preview: 'Dada a seguinte documentação de uma API, você saberia dizer se ela é uma API RESTful? Com certeza, não é uma API RESTful. Mas por quê? Primeiramente, vamos entender cada um dos conceitos que definem uma API RESTful...'
+date: '2024-12-09T11:50:07+00:00'
+coverPath: /images/posts/sabe-me-dizer-se-essa-api-e-restful.jpg
+categories:
+  - { id: apis, title: APIs }
+  - { id: arquitetura, title: Arquitetura }
+  - { id: backend, title: Backend }
+---
+
+Dada a seguinte documentação de uma API, você saberia dizer se ela é uma API RESTful?
+
+```markdown
+| Operação             | Método HTTP | Path                  |
+|----------------------|-------------|-----------------------|
+| Create a customer    | POST        | /customer/create      |
+| Get a customer by ID | GET         | /getCustomers?id={id} |
+| List all customers   | GET         | /getCustomers         |
+| Update a customer    | POST        | /customer?id={id}     |
+| Delete a customer    | POST        | /deleteCustomers/{id} |
+```
+
+Com certeza, não é uma API RESTful. Mas por quê? Primeiramente, vamos entender cada um dos conceitos que definem uma API RESTful.
+
+---
+
+## **O Que é uma API?**
+
+A sigla API vem do inglês **Application Programming Interface**, ou Interface de Programação de Aplicações. Trata-se de um conjunto de regras que permite que diferentes sistemas ou aplicações se comuniquem entre si, mais especificamente, permitir que outras aplicaçoes acessem as funcionalidades de um software.
+
+---
+
+## **O Que é REST?**
+
+REST (Representational State Transfer) é um estilo arquitetural criado por Roy Fielding em sua tese de doutorado, publicada no ano 2000.
+
+O principal objetivo do REST é permitir a comunicação simples e eficiente entre sistemas. Essa abordagem foi criada para tirar proveito das características já existentes da web, como os métodos HTTP e a estrutura de URLs.
+
+Com REST, os desenvolvedores podem criar sistemas que sejam:
+
+- **Escaláveis:** permitindo o crescimento da aplicação sem grandes mudanças arquiteturais.
+- **Fáceis de integrar:** já que muitas linguagens de programação suportam APIs RESTful.
+- **Simples:** utilizando padrões já conhecidos, como o HTTP.
+
+Portanto, as APIs RESTful são APIs que seguem os princípios do REST. Elas são amplamente utilizadas para construir serviços web que permitem a comunicação entre cliente e servidor utilizando o protocolo HTTP.
+
+---
+
+## **Princípios de uma API RESTful**
+
+Para que uma API seja considerada RESTful, ela precisa seguir os seguintes princípios:
+
+- **Arquitetura Cliente-Servidor:** O cliente e o servidor são separados e independentes. O cliente é responsável pela interface com o usuário, enquanto o servidor lida com o armazenamento e manipulação dos dados.
+- **Stateless (Sem Estado):** Cada requisição feita pelo cliente ao servidor deve conter todas as informações necessárias para processar a solicitação. O servidor não armazena o estado das interações.
+- **Cacheabilidade:** As respostas do servidor devem informar se os dados podem ou não ser armazenados em cache pelo cliente. Isso melhora a eficiência e reduz a carga no servidor.
+- **Interface Uniforme:** O REST define uma interface uniforme para a comunicação entre sistemas, baseada em recursos identificados por URLs e manipulação através de métodos HTTP.
+- **Camadas:** A arquitetura pode ter camadas intermediárias, como servidores proxy ou gateways, que não interferem no comportamento das interações entre cliente e servidor.
+
+---
+
+## **Maturidade de Richardson e as Etapas do Modelo**
+
+O modelo de maturidade de Richardson, criado por Leonard Richardson, avalia APIs RESTful com base em seu grau de adesão aos princípios REST. O modelo tem quatro níveis (ou etapas), que vão do uso mais básico ao uso completo dos princípios REST:
+
+- **Nível 0 - The Swamp of POX (Pântano do POX):** APIs que utilizam apenas um único endpoint para todas as operações, ignorando os métodos HTTP e conceitos de recursos.
+- **Nível 1 - Recursos:** As APIs passam a usar endpoints distintos para diferentes recursos, mas ainda podem ignorar métodos HTTP e HATEOAS.
+- **Nível 2 - Verbos HTTP:** APIs que utilizam adequadamente os métodos HTTP (GET, POST, PUT, DELETE, etc.) para cada operação.
+- **Nível 3 - HATEOAS (Hypermedia as the Engine of Application State):** APIs que fornecem links dentro das respostas para navegação entre recursos, como parte de seu design.
+
+---
+
+## Julgando e Corrigindo Nossa API
+
+### Operação: Create a Customer
+
+- **Atual:** `POST /customer/create`
+- **Problema:** O verbo `create` no caminho vai contra o conceito de identificar recursos, sugerindo que a operação está acoplada ao nome do endpoint.
+- **Correção:** Use o nome do recurso no plural e apenas o método HTTP. Por exemplo: `POST /customers`.
+
+### Operação: Get a Customer by ID
+
+- **Atual:** `GET /getCustomers?id=customer_id`
+- **Problema:** O verbo `get` está presente no caminho, o que viola a ideia de expor recursos. Além disso, o ID deveria ser parte do caminho.
+- **Correção:** Use um caminho que represente o recurso e o ID diretamente, como `GET /customers/{id}`.
+
+### Operação: List All Customers
+
+- **Atual:** `GET /getCustomers`
+- **Problema:** O verbo `get` no caminho ainda está presente, o que não segue os padrões REST.
+- **Correção:** Apenas use `GET /customers`, já que o verbo HTTP e o plural do recurso indicam que se trata de uma listagem.
+
+### Operação: Update a Customer
+
+- **Atual:** `POST /customer?id=customer_id`
+- **Problema:** O método `POST` está sendo usado para uma operação que deveria ser de atualização, e o ID está sendo passado como um parâmetro de query.
+- **Correção:** Utilize o método HTTP `PUT` e identifique o recurso pelo caminho. Por exemplo: `PUT /customers/{id}`.
+
+### Operação: Delete a Customer
+
+- **Atual:** `POST /deleteCustomers/customer_id`
+- **Problema:** O verbo `delete` no caminho não é necessário, e `POST` não é o método adequado para deleções.
+- **Correção:** Use o método HTTP `DELETE` e inclua o ID do recurso no caminho. Por exemplo: `DELETE /customers/{id}`.
+
+```markdown
+| Operação             | Método HTTP | Path            |
+|----------------------|-------------|-----------------|
+| Create a customer    | POST        | /customers      |
+| Get a customer by ID | GET         | /customers/{id} |
+| List all customers   | GET         | /customers      |
+| Update a customer    | PUT         | /customers/{id} |
+| Delete a customer    | DELETE      | /customers/{id} |
+```
+
+Em todos os casos, essas APIs também deveriam retornar hiperlinks como forma de atingir a última fase do modelo de maturidade de Richardson e alcançar o "Glory of REST". No geral, seria suficiente que cada resposta incluísse um objeto de links semelhante a este:
+
+```json
+{
+    ...,
+    "_links": {
+        "self": {
+            "href": "/customers/1"
+        },
+        "update": {
+            "href": "/customers/1",
+            "method": "PUT",
+            "type": "application/json"
+        },
+        "delete": {
+            "href": "/customers/1",
+            "method": "DELETE"
+        }
+    }
+}
+```
+
+---
+
+## **Conclusão**
+
+As APIs RESTful são a escolha preferida em muitos projetos devido à sua simplicidade, flexibilidade e compatibilidade com os padrões da web. Elas permitem que aplicações modernas, como aplicativos móveis, sistemas de e-commerce e serviços de streaming, troquem dados de maneira eficiente e segura.
+
+Além disso, sua independência de linguagem e plataforma torna as APIs RESTful ideais para integração entre diferentes sistemas e tecnologias.

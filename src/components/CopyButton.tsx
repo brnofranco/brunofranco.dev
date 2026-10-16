@@ -1,22 +1,31 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FaRegCopy, FaCheck } from 'react-icons/fa';
 
 export default function CopyButton({ code }: Readonly<{ code: string }>) {
 	const [isChecked, setIsChecked] = useState(false);
 
-	const copyEmailToClipBoard = () => {
-		navigator.clipboard.writeText(code);
-		setIsChecked(true);
+	useEffect(() => {
+		if (!isChecked) return;
 
-		setInterval(() => {
-			setIsChecked(false);
-		}, 2000);
+		const timeoutId = window.setTimeout(() => setIsChecked(false), 2000);
+		return () => window.clearTimeout(timeoutId);
+	}, [isChecked]);
+
+	const copyCodeToClipboard = async () => {
+		await navigator.clipboard.writeText(code);
+		setIsChecked(true);
 	};
 
 	return (
-		<button onClick={copyEmailToClipBoard} title="Copiar código" className="cursor-pointer">
+		<button
+			type="button"
+			onClick={copyCodeToClipboard}
+			title="Copiar código"
+			aria-label="Copiar código"
+			className="cursor-pointer"
+		>
 			{isChecked ? <FaCheck /> : <FaRegCopy />}
 		</button>
 	);

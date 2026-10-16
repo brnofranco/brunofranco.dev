@@ -1,21 +1,17 @@
 import type { NextConfig } from 'next';
+import createMDX from '@next/mdx';
 
 const nextConfig: NextConfig = {
+	output: 'export',
 	images: {
-		remotePatterns: [
-			{
-				protocol: 'https',
-				hostname: 'github.com',
-			},
-			{
-				protocol: 'https',
-				hostname: 'www.datocms-assets.com',
-			},
-		],
+		unoptimized: true,
 	},
+	pageExtensions: ['js', 'jsx', 'mdx', 'ts', 'tsx'],
 	experimental: {
 		globalNotFound: true,
 	},
 };
 
-export default nextConfig;
+const withMDX = createMDX({});
+
+export default withMDX(nextConfig);

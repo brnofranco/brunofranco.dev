@@ -2,10 +2,8 @@ export const config = {
 	siteUrl: process.env.NEXT_PUBLIC_SITE_URL || 'https://brnofranco.vercel.app',
 	siteTitle: 'brunofranco.dev',
 	siteDescription:
-		'Código, aprendizado e reflexões sobre desenvolvimento Full Stack. Artigos técnicos sobre React, Next.js, Node.js, Java, arquitetura de software e boas práticas de programação.',
-	cmsRevalidateSeconds: parseInt(process.env.CMS_REVALIDATE_SECONDS || '3600'),
-	postsPerPage: parseInt(process.env.POSTS_PER_PAGE || '5'),
-	latestPostsQuantity: parseInt(process.env.LATEST_POSTS_QUANTITY || '3'),
+		'Código, aprendizado e reflexões sobre desenvolvimento Full Stack. Artigos técnicos sobre React, Next.js, Node.js, arquitetura de software e boas práticas de programação.',
+	postsPerPage: parseInt(process.env.POSTS_PER_PAGE || '10'),
 	socialMediaLinks: {
 		linkedIn: process.env.LINKEDIN_URL ? process.env.LINKEDIN_URL : 'https://www.linkedin.com/in/brunofmoraes/',
 		gitHub: process.env.GITHUB_URL ? process.env.GITHUB_URL : 'https://github.com/brnofranco',

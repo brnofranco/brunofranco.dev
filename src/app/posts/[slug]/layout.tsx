@@ -7,7 +7,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
 	return {
 		title,
-		description: 'Blog do Bruno Franco',
+		description: 'brunofranco.dev - ' + title,
 	};
 }
 
