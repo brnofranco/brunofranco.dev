@@ -7,6 +7,8 @@
 		"build": "next build",
 		"start": "next",
 		"lint": "eslint .",
+		"post": "node scripts/new/server.mjs post",
+		"reading": "node scripts/new/server.mjs reading",
 		"prepare": "husky"
 	},
 	"dependencies": {
@@ -21,7 +23,8 @@
 		"react": "^19.2.0",
 		"react-dom": "^19.2.0",
 		"react-icons": "^5.5.0",
-		"react-syntax-highlighter": "^15.5.13"
+		"react-syntax-highlighter": "^15.5.13",
+		"sharp": "^0.35.5"
 	},
 	"devDependencies": {
 		"@eslint/eslintrc": "^3",
